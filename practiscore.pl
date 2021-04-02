@@ -32,7 +32,9 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     next if($seen{$link});
     my $name = ($a->content_list)[0];
     my $date = ($tds[1]->content_list)[0];
-    next if(($tds[2]->find_by_tag_name('i'))[0]->attr('class') =~ /text-danger/);
+    my $class = ($tds[2]->find_by_tag_name('i'))[0]->attr('class');
+    next if($class =~ /text-danger/);
+    $class =~ /text-success/ or die 'Looks like the HTML page format changed, time to update the script';
     sendmail(
         From => $FROM,
         To => $TO,
