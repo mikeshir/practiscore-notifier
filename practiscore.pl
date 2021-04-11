@@ -49,5 +49,6 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
         Message => "$name on $date: $SITE/$link\n"
         );
     open(my $f, '>>', $DB) or die "Cannot create $DB: $OS_ERROR\n";
-    say $f "$link,$name,$date";
+    my $timestamp = localtime();
+    say $f "$link,$name,$date,$timestamp";
 }
