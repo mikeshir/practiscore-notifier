@@ -37,9 +37,11 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     next if($seen{$link});
     goto NOTIFY if($class =~ /text-success/);
     $class =~ /text-danger/ or die $FORMAT_ERR;
+    say STDERR $link;
     my $r = $ua->get($link);
     my $root = HTML::TreeBuilder->new_from_content($r->decoded_content);
-    my($msg) = $root->find_by_attribute('class', 'alert alert-info text-center')->find_by_tag_name('strong')->content_list or die $FORMAT_ERR;
+    my($div) = grep { $_->attr('class') && $_->attr('class') =~ /alert alert\-info/ } $root->find_by_tag_name('div') or die $FORMAT_ERR;
+    my($msg) = $div->find_by_tag_name('strong')->content_list or die $FORMAT_ERR;
     next if($msg =~ /Registration opens .* from now/);
   NOTIFY:
     sendmail(
