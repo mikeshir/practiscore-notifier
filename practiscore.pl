@@ -40,7 +40,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     my $r = $ua->get($link);
     my $root = HTML::TreeBuilder->new_from_content($r->decoded_content);
     my($div) = grep { $_->attr('class') && $_->attr('class') =~ /alert alert\-info/ } $root->find_by_tag_name('div') or die $FORMAT_ERR;
-    my($msg) = $div->find_by_tag_name('strong')->content_list or die $FORMAT_ERR;
+    my($msg) = ($div->find_by_tag_name('strong') || $div->find_by_tag_name('h4'))->content_list or die $FORMAT_ERR;
     next if($msg =~ /Registration opens .* from now/);
   NOTIFY:
     sendmail(
