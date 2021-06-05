@@ -48,7 +48,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
         To => $TO,
         Subject => 'Practiscore: new match registration available',
         Message => "$name on $date: $SITE/$link\n"
-        );
+      ) or die "Couldn't send email";
     open(my $f, '>>', $DB) or die "Cannot create $DB: $OS_ERROR\n";
     my $timestamp = localtime();
     say $f "$link,$name,$date,$timestamp";
