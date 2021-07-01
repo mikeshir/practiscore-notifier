@@ -46,7 +46,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     sendmail(
         From => $FROM,
         To => $TO,
-        Subject => 'Practiscore: new match registration available',
+        Subject => 'New match registration available: $name',
         Message => "$name on $date: $SITE/$link\n"
       ) or die "Couldn't send email";
     open(my $f, '>>', $DB) or die "Cannot create $DB: $OS_ERROR\n";
