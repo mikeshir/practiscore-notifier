@@ -3,7 +3,10 @@
 use strict;
 use v5.10;
 use English;
+use diagnostics;
+use utf8;
 
+use Encode;
 use WWW::Mechanize;
 use HTML::TreeBuilder;
 use Mail::Sendmail;
@@ -31,6 +34,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     my($a) = $tds[0]->find_by_tag_name('a');
     my $link = $a->attr('href');
     my($name) = $a->content_list;
+	$name = Encode::encode('iso-8859-1', $name);
     my($date) = $tds[1]->content_list;
     my $class = ($tds[2]->find_by_tag_name('i'))[0]->attr('class');
     $link && $name && $date && $class or die $FORMAT_ERR;
