@@ -26,6 +26,8 @@ if(open(my $f, '<', $DB)) {
 
 my $ua = new WWW::Mechanize(agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15');
 $ua->get("$SITE/login");
+my $form = $ua->form_number(1);
+$form->action($ua->uri());
 $ua->submit_form(fields => {username => $USER, password => $PASSWORD});
 my $r = $ua->get("/dashboard/findevents");
 my $root = HTML::TreeBuilder->new_from_content($r->decoded_content);
@@ -34,7 +36,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
     my($a) = $tds[0]->find_by_tag_name('a');
     my $link = $a->attr('href');
     my($name) = $a->content_list;
-	$name = Encode::encode('iso-8859-1', $name);
+    $name = Encode::encode('iso-8859-1', $name);
     my($date) = $tds[1]->content_list;
     my $class = ($tds[2]->find_by_tag_name('i'))[0]->attr('class');
     $link && $name && $date && $class or die $FORMAT_ERR;
@@ -49,7 +51,7 @@ foreach my $tr (($root->find_by_attribute('id', 'findevents')->find_by_tag_name(
   NOTIFY:
     sendmail(
         From => $FROM,
-        To => $TO,
+        Bcc => $TO,
         Subject => "New match registration available: $name",
         Message => "$name on $date: $SITE/$link\n"
       ) or die "Couldn't send email";
